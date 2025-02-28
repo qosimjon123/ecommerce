@@ -1,20 +1,35 @@
 from rest_framework import serializers
 
+
 from .models import Product, Brand, Store, Category, SubCategory, StoreProduct, PriceHistory
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id', 'brand', 'subcategory', 'sku', 'name', 'description', ]
-
-
-
-
 class BrandSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Brand
         fields = ['id', 'name']
+
+
+
+class SubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategory
+        fields = ['id', 'category', 'name', ]
+
+
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    brand = BrandSerializer(read_only=True)
+    subcategory = SubCategorySerializer(read_only=True)
+    class Meta:
+        model = Product
+        fields = ['id', 'brand', 'subcategory', 'sku', 'name', 'description']
+
+
+
+
 
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -30,13 +45,9 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'brand', 'name']
 
 
-class SubCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubCategory
-        fields = ['id', 'category', 'name', ]
+
 
 class StoreProductSerializer(serializers.ModelSerializer):
-
     product = ProductSerializer(read_only=True)
     store = StoreSerializer(read_only=True)
     class Meta:
