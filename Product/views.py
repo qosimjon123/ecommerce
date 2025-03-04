@@ -41,4 +41,4 @@ class StoreProductViewSet(ModelViewSet):
     queryset = StoreProduct.objects.select_related('product', 'store')
     serializer_class = StoreProductSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['product', 'store', 'store__brand']
+    filterset_fields = ['product', 'store']

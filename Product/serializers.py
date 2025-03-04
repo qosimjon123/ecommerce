@@ -21,8 +21,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    brand = BrandSerializer(read_only=True)
-    subcategory = SubCategorySerializer(read_only=True)
+
     class Meta:
         model = Product
         fields = ['id', 'brand', 'subcategory', 'sku', 'name', 'description']

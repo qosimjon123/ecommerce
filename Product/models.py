@@ -1,13 +1,11 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class Brand(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    logo = models.ImageField(upload_to='brands/logos/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
-
-
 
     def __str__(self):
         return self.name
@@ -33,7 +31,7 @@ class Store(models.Model):
 class Category(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    logo = models.ImageField(upload_to='categories/logos/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -57,9 +55,12 @@ class Product(models.Model):
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, db_index=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    sku = models.CharField(max_length=50, unique=True)
+    sku = models.CharField(max_length=50)
+    main_image = models.ImageField(upload_to='products/main/', null=True, blank=True)
+    other_image = models.ImageField(upload_to='products/other/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return self.name
@@ -68,6 +69,9 @@ class Product(models.Model):
         indexes = [
             models.Index(fields=['brand_id']),
             models.Index(fields=['subcategory_id']),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=['brand', 'sku'], name='unique_brand_sku')
         ]
 
 class StoreProduct(models.Model):
@@ -88,6 +92,15 @@ class StoreProduct(models.Model):
             models.Index(fields=['product_id']),
         ]
 
+
+class Quantity(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, db_index=True, default=None)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_index=True, default=None)
+    quantity = models.PositiveIntegerField(default=1)
+
+
+
+
 class PriceHistory(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
@@ -99,3 +112,7 @@ class PriceHistory(models.Model):
 
     def __str__(self):
         return f"{self.product.name} в {self.store.address}"
+
+
+
+
