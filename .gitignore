@@ -1,3 +1,6 @@
 .idea/
 *.iml
 *__pycache__*
+
+
+brands/*
