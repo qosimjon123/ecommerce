@@ -17,7 +17,7 @@ class StoreViewSet(ModelViewSet):
 
 
 class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.select_related('brand').all()
     serializer_class = CategorySerializer
 
 
@@ -26,19 +26,15 @@ class SubCategoryViewSet(ModelViewSet):
     serializer_class = SubCategorySerializer
 
 
-
-
-
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.select_related('brand', 'subcategory')  # Оптимизация запросов
+    queryset = Product.objects.select_related('brand', 'subcategory').prefetch_related('other_images')
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['brand', 'subcategory']
 
 
-
 class StoreProductViewSet(ModelViewSet):
-    queryset = StoreProduct.objects.select_related('product', 'store')
+    queryset = StoreProduct.objects.prefetch_related('product', 'store')
     serializer_class = StoreProductSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['product', 'store']

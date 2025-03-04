@@ -1,4 +1,6 @@
-from Product.models import Product
+from django import forms
+
+from Product.models import Product, ProductImage
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
 from Product.admin import ProductAdmin
@@ -14,8 +16,15 @@ class TagInline(GenericTabularInline):
 
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
+
+
+
+
 class CustomProductAdmin(ProductAdmin):
-    inlines = [TagInline]
+    inlines = [ProductImageInline, TagInline]
 
 
 

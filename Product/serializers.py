@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-from .models import Product, Brand, Store, Category, SubCategory, StoreProduct, PriceHistory
+from .models import Product, Brand, Store, Category, SubCategory, StoreProduct, PriceHistory, ProductImage
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -20,14 +20,19 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image', 'created_at']
+
 class ProductSerializer(serializers.ModelSerializer):
+    brand = serializers.StringRelatedField()  # Показывает название бренда
+    subcategory = serializers.StringRelatedField()  # Показывает название подкатегории
+    other_images = ProductImageSerializer(many=True, read_only=True)  # Список доп. картинок
 
     class Meta:
         model = Product
-        fields = ['id', 'brand', 'subcategory', 'sku', 'name', 'description']
-
-
-
+        fields = ['id', 'name', 'description', 'sku', 'main_image', 'other_images', 'brand', 'subcategory', 'created_at', 'updated_at']
 
 
 
@@ -39,6 +44,7 @@ class StoreSerializer(serializers.ModelSerializer):
                   'delivery_radius_km', 'is_active', ]
 
 class CategorySerializer(serializers.ModelSerializer):
+    brand = BrandSerializer(read_only=True)
     class Meta:
         model = Category
         fields = ['id', 'brand', 'name']
