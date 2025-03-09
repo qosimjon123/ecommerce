@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
 
-from .models import Product, Brand, Store, Category, SubCategory, StoreProduct, PriceHistory, ProductImage
+from .models import Product, Brand, Store, Category, SubCategory, StoreProduct, PriceHistory, ProductImage, Quantity
 
 
 class BrandSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Brand
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'image']
 
 
 
@@ -32,7 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'sku', 'main_image', 'other_images', 'brand', 'subcategory', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'description', 'sku', 'image', 'other_images', 'brand', 'subcategory', 'created_at', 'updated_at']
 
 
 
@@ -47,7 +47,7 @@ class CategorySerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
     class Meta:
         model = Category
-        fields = ['id', 'brand', 'name']
+        fields = ['id', 'brand', 'name', 'image']
 
 
 
@@ -55,6 +55,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class StoreProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     store = StoreSerializer(read_only=True)
+
     class Meta:
         model = StoreProduct
         fields = ['id', 'product', 'store', 'price', 'discount']
@@ -62,3 +63,7 @@ class StoreProductSerializer(serializers.ModelSerializer):
 
 
 
+class ActualPriceInStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoreProduct
+        fields = ['price', 'discount', 'product_id', 'store_id']

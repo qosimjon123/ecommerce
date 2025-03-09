@@ -12,6 +12,6 @@ router.register('subcategory', views.SubCategoryViewSet)
 router.register('brand', views.BrandViewSet)
 router.register('store', views.StoreViewSet)
 router.register('storeproduct', views.StoreProductViewSet)
-
+router.register('price', views.GetPriceViewSet, basename='price')
 
 urlpatterns = router.urls

@@ -1,8 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from Product.models import Product, Brand, Store, Category, SubCategory, StoreProduct
+from Product.models import Product, Brand, Store, Category, SubCategory, StoreProduct, Quantity
 from .serializers import ProductSerializer, BrandSerializer, StoreSerializer, CategorySerializer, SubCategorySerializer, \
-    StoreProductSerializer
+    StoreProductSerializer, ActualPriceInStoreSerializer
 
 
 class BrandViewSet(ModelViewSet):
@@ -34,7 +37,22 @@ class ProductViewSet(ModelViewSet):
 
 
 class StoreProductViewSet(ModelViewSet):
-    queryset = StoreProduct.objects.prefetch_related('product', 'store')
+    queryset = StoreProduct.objects.select_related(
+        'store__brand',  # Загружаем Store и связанный Brand
+        'product__brand',  # Загружаем Product и связанный Brand
+        'product__subcategory'  # Загружаем SubCategory и Category
+    ).prefetch_related(
+        'product__other_images'  # Загружаем связанные ProductImage, если используются
+    ).all()
     serializer_class = StoreProductSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['product', 'store']
+    filterset_fields = ['product__id', 'store__id']
+
+
+
+
+class GetPriceViewSet(ModelViewSet):
+    queryset = StoreProduct.objects.all()
+    serializer_class = ActualPriceInStoreSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['product__id', 'store__id']
