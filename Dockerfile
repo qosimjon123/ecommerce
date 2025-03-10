@@ -15,8 +15,3 @@ COPY Pipfile Pipfile.lock /app/
 WORKDIR /app
 RUN pipenv install --deploy --ignore-pipfile
 
-# Копирование всех файлов в контейнер
-COPY . .
-
-EXPOSE 8000
-
