@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'Shop',
         'USER': 'root',
         'PASSWORD': 'kali',
-        'HOST': '127.0.0.1',
+        'HOST': 'mysql-container',
         'PORT': '3306',
     }
 }
