@@ -1,11 +1,10 @@
 from django.contrib import admin
-from .models import Brand, Store, Category, SubCategory, Product, StoreProduct, PriceHistory, ProductImage
+from .models import Brand, Store, Category, SubCategory, Product, StoreProduct, PriceHistory, ProductImage, Quantity
 from django.utils.html import format_html
 
 
 
 admin.site.register(SubCategory)
-
 
 
 @admin.register(Category)
@@ -90,7 +89,7 @@ class StoreProductAdmin(admin.ModelAdmin):
 
 
 
-
+admin.site.register(Quantity)
 
 
 @admin.register(Product)

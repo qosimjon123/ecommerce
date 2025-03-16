@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework.utils import representation
 
 from .models import Product, Brand, Store, Category, SubCategory, StoreProduct, PriceHistory, ProductImage, Quantity
 
@@ -52,13 +52,59 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
+
+
+
+
 class StoreProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     store = StoreSerializer(read_only=True)
+    quantity = serializers.IntegerField(source='quantity_value')
+
 
     class Meta:
         model = StoreProduct
-        fields = ['id', 'product', 'store', 'price', 'discount']
+        fields = ['id', 'product', 'store', 'price', 'discount', 'quantity']
+
+
+
+
+class CustomStoreProductForBasketQtyCheckSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    store = StoreSerializer(read_only=True)
+    quantity = serializers.IntegerField(source='quantity_value')
+
+
+    class Meta:
+        model = StoreProduct
+        fields = ['product', 'store', 'quantity']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        if 'store' in representation:
+            store_data = representation['store']
+            allowed_fields = ['id']
+            store_data = {key: store_data[key] for key in store_data if key in allowed_fields }
+            representation['store'] = store_data
+
+        if 'product' in representation:
+            product_data = representation['product']
+            allowed_fields = ['id']
+            product_data = {key: product_data[key] for key in product_data if key in allowed_fields}
+            representation['product'] = product_data
+
+
+
+
+
+        return representation
+
+
+
+
+
+
 
 
 

@@ -185,10 +185,11 @@ class StoreProduct(models.Model):
 
 
 class Quantity(models.Model):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, db_index=True, default=None)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_index=True, default=None)
+    store = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, db_index=True, default=None, related_name='quantity')
     quantity = models.PositiveIntegerField(default=1)
 
+    def __str__(self):
+        return f'{self.quantity} {self.store.store.address}'
 
 
 
