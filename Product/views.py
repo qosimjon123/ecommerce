@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from django.db.models import F
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
@@ -8,6 +9,9 @@ from rest_framework.viewsets import ModelViewSet
 from Product.models import Product, Brand, Store, Category, SubCategory, StoreProduct, Quantity
 from .serializers import ProductSerializer, BrandSerializer, StoreSerializer, CategorySerializer, SubCategorySerializer, \
     StoreProductSerializer, ActualPriceInStoreSerializer, CustomStoreProductForBasketQtyCheckSerializer
+from .pagination import CustomPagination
+
+
 
 
 class BrandViewSet(ModelViewSet):
@@ -38,6 +42,17 @@ class ProductViewSet(ModelViewSet):
     filterset_fields = ['brand', 'subcategory']
 
 
+
+class StoreProductFilter(filters.FilterSet):
+
+    product__id = filters.BaseInFilter(field_name='product__id', lookup_expr='in')
+
+    class Meta:
+        model = StoreProduct
+        fields = ['product__id', 'store__id']
+
+
+
 class StoreProductViewSet(ModelViewSet):
     queryset = StoreProduct.objects.select_related(
 
@@ -49,10 +64,12 @@ class StoreProductViewSet(ModelViewSet):
         'product__other_images'
     ).annotate(
         quantity_value=F('quantity__quantity')
-    ).all()
+    ).all().order_by('-quantity__quantity')
+
+    pagination_class = CustomPagination
     serializer_class = StoreProductSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['product__id', 'store__id']
+    filterset_class = StoreProductFilter
 
     @action(methods=['get'], detail=False)
     def has_quantity(self, request, *args, **kwargs):
@@ -73,6 +90,9 @@ class StoreProductViewSet(ModelViewSet):
         serializer = CustomStoreProductForBasketQtyCheckSerializer(filtered_products, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
 
 
 class GetPriceViewSet(ModelViewSet):

@@ -1,8 +1,7 @@
-import os
 
 from django.core.exceptions import ValidationError
-from django.core.files import File
 from django.db import models
+from django.utils import timezone
 
 from Product.functions import  delete_image_methods, process_save_image
 
@@ -170,11 +169,13 @@ class StoreProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, db_index=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.IntegerField(default=0)
+    sent = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     def __str__(self):
-        return f"{self.product.name} в {self.store.address}"
+        return f"{self.product.name} in store address: {self.store.address}"
 
     class Meta:
         unique_together = ('store', 'product')
@@ -184,13 +185,18 @@ class StoreProduct(models.Model):
         ]
 
 
+
+
 class Quantity(models.Model):
-    store = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, db_index=True, default=None, related_name='quantity')
-    quantity = models.PositiveIntegerField(default=1)
+    store = models.OneToOneField(StoreProduct, on_delete=models.CASCADE, db_index=True, related_name='quantity')
+    quantity = models.PositiveIntegerField(default=0)
+    sent = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
-        return f'{self.quantity} {self.store.store.address}'
-
+        return f'{self.quantity}'
 
 
 class PriceHistory(models.Model):

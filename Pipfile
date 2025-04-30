@@ -11,6 +11,9 @@ djangorestframework = "*"
 drf-nested-routers = "*"
 django-filter = "*"
 pillow = "*"
+pika = "*"
+django-cors-headers = "*"
+django-import-export = "*"
 
 [dev-packages]
 
