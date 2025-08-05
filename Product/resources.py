@@ -1,6 +1,6 @@
 from import_export import resources
 from import_export.fields import Field
-from .models import Brand, Store, Category, SubCategory, Product, StoreProduct, PriceHistory, ProductImage, Quantity
+from .models import Brand, Store, Category, SubCategory, Product, PriceHistory, ProductImage, Schedule, Unit, ProductVariant, Inventory
 
 class BrandResource(resources.ModelResource):
     class Meta:
@@ -22,12 +22,6 @@ class StoreResource(resources.ModelResource):
     class Meta:
         model = Store
 
-
-class StoreProductResource(resources.ModelResource):
-    class Meta:
-        model = StoreProduct
-
-
 class PriceHistoryResource(resources.ModelResource):
     class Meta:
         model = PriceHistory
@@ -36,6 +30,21 @@ class ProductImageResource(resources.ModelResource):
     class Meta:
         model = ProductImage
 
-class QuantityResource(resources.ModelResource):
+class ScheduleResource(resources.ModelResource):
     class Meta:
-        model = Quantity
+        model = Schedule
+
+class UnitResource(resources.ModelResource):
+    class Meta:
+        model = Unit
+
+class ProductVariantResource(resources.ModelResource):
+    class Meta:
+        model = ProductVariant
+
+class InventoryResource(resources.ModelResource):
+    class Meta:
+        model = Inventory
+
+
+

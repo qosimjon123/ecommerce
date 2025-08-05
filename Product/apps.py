@@ -7,3 +7,5 @@ class ProductConfig(AppConfig):
 
     def ready(self):
         import Product.signals
+        from . import StreamConsumer
+        StreamConsumer.start_consumer_pool()

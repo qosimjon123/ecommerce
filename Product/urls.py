@@ -6,12 +6,12 @@ from . import views
 
 router = routers.DefaultRouter()
 
-router.register('product', views.ProductViewSet)
-router.register('category', views.CategoryViewSet)
-router.register('subcategory', views.SubCategoryViewSet)
 router.register('brand', views.BrandViewSet)
-router.register('store', views.StoreViewSet)
-router.register('storeproduct', views.StoreProductViewSet)
-router.register('price', views.GetPriceViewSet, basename='price')
+router.register('brand-store', views.BrandStoreViewSet, basename='brand-store')
+router.register('store', views.StoreViewSet, basename='store')
+router.register('store-category', views.StoreCategoryViewSet, basename='store-category')
+router.register('store-product', views.StoreProductViewSet, basename='store-product')
+router.register('product', views.ProductViewSet, basename='product')
+
 
 urlpatterns = router.urls

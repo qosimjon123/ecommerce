@@ -14,6 +14,10 @@ pillow = "*"
 pika = "*"
 django-cors-headers = "*"
 django-import-export = "*"
+uuid = "*"
+shortuuid = "*"
+rstream = "*"
+channels = "*"
 
 [dev-packages]
 

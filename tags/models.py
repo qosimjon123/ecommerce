@@ -28,5 +28,5 @@ class TaggedItem(models.Model):
     objects = TaggedItemManager()
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    object_id = models.CharField(max_length=12)
     content_object = GenericForeignKey()
